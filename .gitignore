@@ -7,7 +7,7 @@ __pycache__/
 *.so
 eval.exe
 res-*.jpg
-res-*.*
+res-*.jpeg
 localenv
 
 # Distribution / packaging
