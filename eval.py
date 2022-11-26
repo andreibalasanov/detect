@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 
 import os
+from utils import ExecTimer,ExecOp
+tfimport_time = ExecOp ("tfimport")
+app_time = ExecOp ("app")
 import tensorflow as tf
+ExecTimer.instance().reportOp (tfimport_time)
+
 import numpy as np
 from PIL import Image, ImageDraw
 import cv2
 from pathlib import Path
 import glob
-from utils import ExecTimer,ExecOp
 
 def infer (interpreter,image_path):
 	op = ExecOp ("inference")
@@ -78,6 +82,8 @@ for filepath in glob.iglob('testdata/*'):
 	res = infer (interpreter,src_img_path)
 	annotate (res,src_img_path)
 	ExecTimer.instance().summary ("inference")
+
+ExecTimer.instance().reportOp (app_time)
 ExecTimer.instance().allsummary ()
 print ("Completed...")
 
