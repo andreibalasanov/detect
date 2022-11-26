@@ -1,4 +1,25 @@
 import time
+
+from PIL import Image, ImageDraw
+
+def annotate(res,image):
+	
+	src = Image.fromarray(image)
+        
+	draw = ImageDraw.Draw(src)
+        
+	for entry in res:
+                
+		i,score,cl = entry
+                
+		#print (i,score,cl)
+                
+		if score > .7:
+                        
+			draw.rectangle( (i[0], i[1], i[2], i[3]),outline=(255, 0, 0))
+        
+	return src
+
 class Counter:
 	def __init__(self,name,value,count=1):
 		self.count = count-1
