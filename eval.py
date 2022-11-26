@@ -74,7 +74,7 @@ interpreter.allocate_tensors()
 
 
 for filepath in glob.iglob('testdata/*'):
-	src_img_path = "testdata/test.jpg"
+	src_img_path = filepath
 	res = infer (interpreter,src_img_path)
 	annotate (res,src_img_path)
 	ExecTimer.instance().summary ("inference")
