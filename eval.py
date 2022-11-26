@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 
-import numpy as n
+import os
 import tensorflow as tf
 import numpy as np
 from PIL import Image, ImageDraw
 import cv2
+from pathlib import Path
+import glob
+from utils import ExecTimer,ExecOp
 
 def infer (interpreter,image_path):
+	op = ExecOp ("inference")
 	input_details = interpreter.get_input_details()
 	output_details = interpreter.get_output_details()
 	input_shape = input_details[0]['shape']
@@ -48,6 +52,7 @@ def infer (interpreter,image_path):
 		score = scores [i]
 		cl = classes[i]
 		ret.append (([xmin,ymin,xmax,ymax],score,cl))
+	ExecTimer.instance().reportOp (op)
 	return ret
 
 def annotate(res,image_path):
@@ -58,14 +63,22 @@ def annotate(res,image_path):
 		#print (i,score,cl)
 		if score > .7:
 			draw.rectangle( (i[0], i[1], i[2], i[3]),outline=(255, 0, 0))
-	src.save ("res.jpg")
+	base = os.path.basename(image_path)
+	src.save ("res-"+base)
 
 interpreter = tf.lite.Interpreter(model_path="model.tflite")
 interpreter.allocate_tensors()
 
-src_img_path = "test.jpg"
-res = infer (interpreter,src_img_path)
-annotate (res,src_img_path)
+
+
+
+
+for filepath in glob.iglob('testdata/*'):
+	src_img_path = "testdata/test.jpg"
+	res = infer (interpreter,src_img_path)
+	annotate (res,src_img_path)
+	ExecTimer.instance().summary ("inference")
+ExecTimer.instance().allsummary ()
 print ("Completed...")
 
 
