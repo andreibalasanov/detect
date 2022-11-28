@@ -1,25 +1,27 @@
 #!/usr/bin/env python3
 
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+#os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 from utils import ExecTimer,ExecOp
+
 app_time = ExecOp ("app")
 import os
-from tfengine import Engine
+#from engine.tf_lite_engine import Engine as TFEngine
+from engine.tfengine import Engine as TFEngine
 import cv2
 from pathlib import Path
 import glob
-from utils import annotate
-
-
+from utils import imgannotate
+from logic import detector_filter
 
 if os.path.exists("testdata"):
-	engine = Engine()
+	engine = TFEngine()
 	for filepath in glob.iglob('testdata/*'):
 		image = cv2.imread(filepath)
-		res = engine.process (image)
-		resimage = annotate (res,image)
+		res,name = engine.process (image)
+		res = detector_filter (res)
+		resimage = imgannotate(res,image)
 	
 		ExecTimer.instance().summary ("inference")
 		base = os.path.basename(filepath)
@@ -30,5 +32,3 @@ else:
 ExecTimer.instance().reportOp (app_time)
 ExecTimer.instance().allsummary ()
 print ("Completed...")
-
-

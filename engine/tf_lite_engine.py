@@ -49,14 +49,12 @@ def infer (interpreter,image):
 	ExecTimer.instance().reportOp (op)
 	return ret
 
-
 class Engine:
 	
 	def __init__(self,model="model.tflite"):
 		tfimport_time = ExecOp ("tfimport")
 		import tensorflow as tf
 		ExecTimer.instance().reportOp (tfimport_time)
-
 
 		op = ExecOp ("modelload")
 		self.interpreter = tf.lite.Interpreter(model_path="model.tflite")
