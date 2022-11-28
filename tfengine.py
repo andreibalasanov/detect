@@ -1,11 +1,6 @@
-import os
-from utils import ExecTimer,ExecOp
-tfimport_time = ExecOp ("tfimport")
-import tensorflow as tf
-ExecTimer.instance().reportOp (tfimport_time)
 import numpy as np
 import cv2
-
+from utils import ExecTimer,ExecOp
 
 def infer (interpreter,image):
 	op = ExecOp ("inference")
@@ -56,6 +51,11 @@ def infer (interpreter,image):
 class Engine:
 	
 	def __init__(self,model="model.tflite"):
+		tfimport_time = ExecOp ("tfimport")
+		import tensorflow as tf
+		ExecTimer.instance().reportOp (tfimport_time)
+
+
 		op = ExecOp ("modelload")
 		self.interpreter = tf.lite.Interpreter(model_path="model.tflite")
 		self.interpreter.allocate_tensors()
