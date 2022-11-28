@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 from utils import ExecTimer,ExecOp
 app_time = ExecOp ("app")
 import os
