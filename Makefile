@@ -1,2 +1,2 @@
 clean:
-	rm -rf dist build exec.spec *.jpeg
+	rm -rf dist build exec.spec *.jpeg res-test.jpg 

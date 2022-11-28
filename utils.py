@@ -2,22 +2,20 @@ import time
 
 from PIL import Image, ImageDraw
 
-def annotate(res,image):
-	
+def imgannotate(res,image):
 	src = Image.fromarray(image)
-        
 	draw = ImageDraw.Draw(src)
-        
 	for entry in res:
-                
 		i,score,cl = entry
-                
 		#print (i,score,cl)
-                
-		if score > .7:
-                        
+		if score > 0:
 			draw.rectangle( (i[0], i[1], i[2], i[3]),outline=(255, 0, 0))
-        
+
+			text = "score  :  "+str(score)
+			bbox = draw.textbbox((i[0], i[1]), text )
+			draw.rectangle(bbox, fill="white")
+
+			draw.text((i[0], i[1]), text, fill="black",align ="left")
 	return src
 
 class Counter:
