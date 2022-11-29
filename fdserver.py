@@ -10,6 +10,7 @@ import os
 from datetime import datetime
 import threading
 import numpy as np
+import sys
 
 from flask_cors import CORS
 from PIL import Image
@@ -28,7 +29,20 @@ app.config["DEBUG"] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 start = time.time()
 
-engine = TFEngine()
+
+from pathlib import Path
+import sys
+
+if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+    bundle_dir = Path(sys._MEIPASS)
+else:
+    bundle_dir = Path(__file__).parent
+
+
+path_to_dat = Path.cwd() / bundle_dir 
+print ("Path to dat is:",path_to_dat)
+
+engine = TFEngine(path_to_dat)
 
 def locationsToJson (locations):
 	faces = []
@@ -61,7 +75,10 @@ def detect():
 		ret = {}
 		ret ["info"] = info
 		ret ["persons"] = len (faces)
-		ret ["personStatus"] = "ePersonStatusUknown"
+		if len(faces)==1:
+			ret ["personStatus"] = "ePersonStatusNoArtifacts"
+		else:
+			ret ["personStatus"] = "ePersonStatusUknown"
 		return json.dumps(ret), 200
         
 	except Exception as e:
@@ -115,7 +132,7 @@ def ready():
         
 @app.route('/api/swagger.json', methods=['GET'])
 def swagger():
-	return flask.send_file("openapi.json")
+	return flask.send_file(path_to_dat / "openapi.json")
 
 SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
 API_URL = '/api/swagger.json'

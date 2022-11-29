@@ -38,7 +38,7 @@ class Engine:
 		self.tf = tf
 		ExecTimer.instance().reportOp (tfimport_time)
 		op = ExecOp ("modelload")
-		loaded = tf.saved_model.load("./")
+		loaded = tf.saved_model.load(model)
 		self.inferp = loaded.signatures["serving_default"]
 		ExecTimer.instance().reportOp (op)
 	
