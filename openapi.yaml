@@ -1,0 +1,80 @@
+openapi: 3.0.3
+info:
+ title: Face Detector
+ version: 2.0.11
+servers:
+ - url: http://localhost:8080/api/v1
+ - url: https://fd.iq-dev.k8.bs2.lt/api/v1
+tags:
+ - name: FaceDetect
+   description: Face detector
+
+components:
+  schemas:
+    DetectResult:
+      type: object
+      properties:
+        faces:
+          type: array
+          items:
+            $ref: '#/components/schemas/FaceLocation'
+          
+    FaceLocation:
+      type: object
+      properties:
+        top:
+          type: number
+        bottom:
+          type: number
+        left:
+          type: number
+        right:
+          type: number
+    
+
+paths:
+  /detect:
+    post:
+      tags:
+        - FaceDetect
+      summary: Detect a face
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+          # 'file' will be the field name in this multipart request
+                file:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: Completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetectResult'
+  /annotate:
+    post:
+      tags:
+        - FaceDetect
+      summary: Detect a face
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+          # 'file' will be the field name in this multipart request
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+              image/png:
+                schema: 
+                  type: string
+                  format: binary
