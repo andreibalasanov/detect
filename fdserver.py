@@ -17,17 +17,12 @@ from PIL import Image
 from engine.tfengine import Engine as TFEngine
 from utils import imgannotate
 from logic import detector_filter
-app = Flask(__name__)
-CORS(app)
 
 
 import logger
 from logger import getLogger
 logger = getLogger(__name__)
 
-app.config["DEBUG"] = False
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
-start = time.time()
 
 
 from pathlib import Path
@@ -41,6 +36,12 @@ else:
 
 path_to_dat = Path.cwd() / bundle_dir 
 print ("Path to dat is:",path_to_dat)
+
+app = Flask(__name__,template_folder=path_to_dat / "templates" )
+CORS(app)
+app.config["DEBUG"] = False
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+start = time.time()
 
 engine = TFEngine(path_to_dat)
 
