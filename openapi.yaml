@@ -31,13 +31,53 @@ components:
         right:
           type: number
     
+    ePersonStatus:
+      type: string
+      enum:
+        - ePersonStatusNoArtifacts
+        - ePersonStatusHasFaceMaks
+        - ePersonStatusHasHijab
+        - ePersonStatusUknown
+
+    FDAnalysis:
+      type: object
+      properties:
+        persons:
+          type: number
+        personStatus:
+          $ref: '#/components/schemas/ePersonStatus'
+        info:
+          $ref: '#/components/schemas/DetectResult'
+        
 
 paths:
   /detect:
     post:
       tags:
         - FaceDetect
-      summary: Detect a face
+      summary: Analize faces
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+          # 'file' will be the field name in this multipart request
+                file:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: Completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FDAnalysis'
+  /detect_faces:
+    post:
+      tags:
+        - FaceDetect
+      summary: Detect a faces
       requestBody:
         content:
           multipart/form-data:

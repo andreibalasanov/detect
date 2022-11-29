@@ -30,9 +30,47 @@ start = time.time()
 
 engine = TFEngine()
 
+def locationsToJson (locations):
+	faces = []
+	for loc in locations:
+		face = {}
+		pos,score,dclass = loc
+		top, right, bottom, left = pos
+		face["top"] = top
+		face["right"] = right
+		face["bottom"] = bottom
+		face["left"] = left
+		face["score"] = score
+		faces.append (face)
+	return faces
 
 @app.route('/api/v1/detect', methods=['POST'])
 def detect():
+	try:    
+		if 'file' not in request.files:
+			raise Exception ("No file")
+		file = request.files['file']
+		img = Image.open(request.files['file'].stream)
+		cvimg = np.array(img)
+		locations,desc =  engine.process (cvimg)
+		info = {}
+		locations = detector_filter (locations)
+		faces = locationsToJson (locations)
+                
+		info['faces']=faces
+		ret = {}
+		ret ["info"] = info
+		ret ["persons"] = len (faces)
+		ret ["personStatus"] = "ePersonStatusUknown"
+		return json.dumps(ret), 200
+        
+	except Exception as e:
+		raise e;
+		return "Error", 500
+
+
+@app.route('/api/v1/detect_faces', methods=['POST'])
+def detect_faces():
 	try:
 		if 'file' not in request.files:
 			raise Exception ("No file")
@@ -41,18 +79,8 @@ def detect():
 		cvimg = np.array(img) 
 		locations,desc =  engine.process (cvimg)
 		ret = {}
-		faces = []
 		locations = detector_filter (locations)
-		for loc in locations:
-			face = {}
-			pos,score,dclass = loc
-			top, right, bottom, left = pos
-			face["top"] = top
-			face["right"] = right
-			face["bottom"] = bottom
-			face["left"] = left
-			face["score"] = score
-			faces.append (face)
+		faces = locationsToJson (locations)
 		ret['faces']=faces
 		return json.dumps(ret), 200
 	except Exception as e:

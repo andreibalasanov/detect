@@ -7,7 +7,7 @@ __pycache__/
 # C extensions
 *.so
 fdserver.exe
-eval.exe
+fdeval.exe
 res-*.jpg
 res-*.jpeg
 localenv
