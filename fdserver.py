@@ -37,7 +37,7 @@ else:
 path_to_dat = Path.cwd() / bundle_dir 
 print ("Path to dat is:",path_to_dat)
 
-app = Flask(__name__,template_folder=path_to_dat / "templates" )
+app = Flask(__name__)
 CORS(app)
 app.config["DEBUG"] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
