@@ -70,7 +70,7 @@ parser.add_argument('path',
 parser.add_argument('--m',
 			action='store',
 			default='test-many',
-			choices=['annotate', 'test-single','test-many','test-mask'],
+			choices=['annotate', 'test-none','test-single','test-many','test-mask'],
 			)
 
 parser.add_argument('--process',
