@@ -89,11 +89,19 @@ def detect():
 			ret ["personStatus"] = "ePersonStatusNoArtifacts"
 		else:
 			ret ["personStatus"] = "ePersonStatusUknown"
+		ret["result"] = "MAINSTTFW_RC_FACE_RECOGNITION_ERROR"
+		if len (faces)==1:
+			ret["result"] = "MAINSTTFW_RC_VALID_FACE"
+		elif len(faces)>1:
+			ret["result"] = "MAINSTTFW_RC_MANY_FACES"
+		elif len(faces)==0:
+			ret["result"] = "MAINSTTFW_RC_FACE_NOT_FOUND"
 		return json.dumps(ret), 200
         
 	except Exception as e:
-		raise e;
-		return "Error", 500
+		ret = {}
+		ret["result"] = "MAINSTTFW_RC_FACE_RECOGNITION_ERROR"
+		return json.dumps(ret), 200
 
 
 @app.route('/api/v1/detect_faces', methods=['POST'])

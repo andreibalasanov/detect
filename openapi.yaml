@@ -30,6 +30,8 @@ components:
           type: number
         right:
           type: number
+        score:
+          type: number
     
     ePersonStatus:
       type: string
@@ -39,9 +41,19 @@ components:
         - ePersonStatusHasHijab
         - ePersonStatusUknown
 
+    eFDAnalysisStatus:
+      type: string
+      enum:
+        - MAINSTTFW_RC_FACE_RECOGNITION_ERROR
+        - MAINSTTFW_RC_UNKNOWN_FACE
+        - MAINSTTFW_RC_FACE_NOT_FOUND
+        - MAINSTTFW_RC_MANY_FACES
+
     FDAnalysis:
       type: object
       properties:
+        result:
+          $ref: '#/components/schemas/eFDAnalysisStatus'
         persons:
           type: number
         personStatus:
